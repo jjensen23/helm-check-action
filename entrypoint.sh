@@ -17,7 +17,7 @@ function displayInfo {
   printDelimeter
   echo
   HELM_CHECK_VERSION="v0.2.0"
-  HELM_CHECK_SOURCES="https://github.com/igabaydulin/helm-check-action"
+  HELM_CHECK_SOURCES="https://github.com/jjensen23/helm-check-action"
   echo "Helm-Check $HELM_CHECK_VERSION"
   echo -e "Source code: $HELM_CHECK_SOURCES"
   echo
@@ -48,7 +48,7 @@ function helmTemplate {
   printLargeDelimeter
   echo -e "2. Trying to render templates with provided values\n"
   if [[ "$1" -eq 0 ]]; then
-    if [ -n "$CHART_VALUES" ]; then
+    if [ -n "$CHART_VALUES" ] && [ -z "$CHART_VALUES_EXTRA" ]; then
       echo "helm template --values $CHART_VALUES $CHART_LOCATION"
       printStepExecutionDelimeter
       helm template --values "$CHART_VALUES" "$CHART_LOCATION"
@@ -60,6 +60,21 @@ function helmTemplate {
         echo "Result: FAILED"
       fi
       return $HELM_TEMPLATE_EXIT_CODE
+    else if
+    if [ -n "$CHART_VALUES" ] && [ -n "$CHART_VALUES_EXTRA" ]; then
+      for extra_values in "${CHART_VALUES_EXTRA[@]}"; do
+        echo "helm template --values $CHART_VALUES $CHART_LOCATION"
+        printStepExecutionDelimeter
+        helm template --values "$CHART_VALUES" --values "$extra_values" "$CHART_LOCATION"
+        HELM_TEMPLATE_EXIT_CODE=$?
+        printStepExecutionDelimeter
+        if [ $HELM_TEMPLATE_EXIT_CODE -eq 0 ]; then
+          echo "Result: SUCCESS"
+        else
+          echo "Result: FAILED"
+        fi
+        return $HELM_TEMPLATE_EXIT_CODE
+      done
     else
       printStepExecutionDelimeter
       echo "Skipped due to condition: \$CHART_VALUES is not provided"

@@ -1,4 +1,4 @@
-FROM alpine/helm:3.5.3
+FROM alpine/helm:3.12.1
 
 LABEL version="0.2.0"
 LABEL repository="https://github.com/igabaydulin/helm-check-action"
@@ -11,4 +11,3 @@ LABEL com.github.actions.color="blue"
 
 ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["sh", "/entrypoint.sh"]
-
