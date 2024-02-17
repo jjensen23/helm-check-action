@@ -62,9 +62,9 @@ function helmTemplate {
           else
             echo "Result: FAILED"
           fi
-          return $HELM_TEMPLATE_EXIT_CODE
         done
         #unset IFS
+        return $HELM_TEMPLATE_EXIT_CODE
       else
         echo "helm template --values $CHART_VALUES $CHART_LOCATION"
         printStepExecutionDelimeter
