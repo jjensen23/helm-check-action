@@ -60,7 +60,7 @@ function helmTemplate {
         echo "Result: FAILED"
       fi
       return $HELM_TEMPLATE_EXIT_CODE
-    else if [ -n "$CHART_VALUES" ] && [ -n "$CHART_VALUES_EXTRA" ]; then
+    elif [ -n "$CHART_VALUES" ] && [ -n "$CHART_VALUES_EXTRA" ]; then
       for extra_values in "${CHART_VALUES_EXTRA[@]}"; do
         echo "helm template --values $CHART_VALUES $CHART_LOCATION"
         printStepExecutionDelimeter
