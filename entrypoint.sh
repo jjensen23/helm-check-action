@@ -51,7 +51,6 @@ function helmTemplate {
     if [ -n "$CHART_VALUES" ]; then
       if [ -n "$CHART_VALUES_EXTRA" ]; then
         #IFS=$'\n'
-        CHART_VALUES_ARRAY=($CHART_VALUES_EXTRA)
         for extra_values in "${CHART_VALUES_ARRAY[@]}"; do
           echo "helm template --values $CHART_VALUES --values $extra_values $CHART_LOCATION"
           printStepExecutionDelimeter
