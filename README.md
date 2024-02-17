@@ -1,6 +1,6 @@
 # Description
 
-Fork of: https://github.com/igabaydulin/helm-check-action with functionality for additional charts.
+Fork of: https://github.com/igabaydulin/helm-check-action with functionality for additional values files.
 
 helm-check is a [github action](https://github.com/features/actions) tool which allows to prevalidate helm chart
 template before its deployment; executes [helm lint](https://helm.sh/docs/helm/#helm-lint) and [helm template](https://helm.sh/docs/helm/#helm-template)
