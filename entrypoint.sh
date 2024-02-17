@@ -50,7 +50,7 @@ function helmTemplate {
   if [[ "$1" -eq 0 ]]; then
     if [ -n "$CHART_VALUES" ]; then
       if [ -n "$CHART_VALUES_EXTRA" ]; then
-        IFS=$'\n'
+        #IFS=$'\n'
         for extra_values in "${CHART_VALUES_EXTRA}"; do
           echo "helm template --values $CHART_VALUES --values $extra_values $CHART_LOCATION"
           printStepExecutionDelimeter
@@ -64,7 +64,7 @@ function helmTemplate {
           fi
           return $HELM_TEMPLATE_EXIT_CODE
         done
-        unset IFS
+        #unset IFS
       else
         echo "helm template --values $CHART_VALUES $CHART_LOCATION"
         printStepExecutionDelimeter
