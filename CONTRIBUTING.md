@@ -19,8 +19,7 @@ Please report unacceptable behavior to igabaydulin@gmail.com.
 
 #### Discuss
 
-If you suspect an issue, perform a search in the
-[GitHub issue tracker](https://github.com/igabaydulin/helm-check-action/issues), using a few different keywords.
+If you suspect an issue, perform a search in the GitHub issue tracker
 When you find related issues and discussions, prior or current, it helps you to learn and
 it helps us to make a decision.
 
