@@ -1,4 +1,4 @@
-# Description [![Version](https://img.shields.io/badge/version-0.2.0-color.svg)](https://github.com/jjensen23/helm-check-action/releases/tag/v1)
+# Description [![Version](https://img.shields.io/badge/version-v1-color.svg)](https://github.com/jjensen23/helm-check-action/releases/tag/v1)
 
 Fork of: https://github.com/igabaydulin/helm-check-action with functionality for additional values files.
 
