@@ -1,4 +1,4 @@
-# Description [![Version](https://img.shields.io/badge/version-v1-color.svg)](https://github.com/jjensen23/helm-check-action/releases/tag/v1)
+# Description [![Version](https://img.shields.io/badge/version-v1.0.1-color.svg)](https://github.com/jjensen23/helm-check-action/releases/tag/v1.0.1)
 
 Fork of: https://github.com/igabaydulin/helm-check-action with functionality for additional values files.
 
@@ -20,7 +20,7 @@ commands
 ## Environment variables
 * `CHART_LOCATION`: chart folder; required field for `helm lint` and `helm template` executions
 * `CHART_VALUES`: custom values file for specific kubernetes environment; required field for `helm template` execution
-* `CHART_VALUES_EXTRA` custom values file for specific kubernetes environments; optional field
+* `CHART_VALUES_EXTRA`: custom values file for specific kubernetes environments; optional field
 
 ## Sample
 ```
@@ -32,7 +32,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: helm-check
-      uses: jjensen23/helm-check-action@v1
+      uses: jjensen23/helm-check-action@v1.0.1
       env:
         CHART_LOCATION: ./charts/exhibit-service
         CHART_VALUES: ./charts/exhibit-service/values.yaml
