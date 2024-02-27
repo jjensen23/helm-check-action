@@ -47,6 +47,8 @@ function helmLint {
 function helmTemplate {
   printLargeDelimeter
   echo -e "2. Trying to render templates with provided values\n"
+  local EXIT_CODE=0
+
   if [[ "$1" -eq 0 ]]; then
     if [ -n "$CHART_VALUES" ]; then
       if [ -n "$CHART_VALUES_EXTRA" ]; then
@@ -61,10 +63,10 @@ function helmTemplate {
             echo "Result: SUCCESS"
           else
             echo "Result: FAILED"
+            EXIT_CODE=$HELM_TEMPLATE_EXIT_CODE
           fi
         done
         unset IFS
-        return $HELM_TEMPLATE_EXIT_CODE
       else
         echo "helm template --values $CHART_VALUES $CHART_LOCATION"
         printStepExecutionDelimeter
@@ -75,8 +77,8 @@ function helmTemplate {
           echo "Result: SUCCESS"
         else
           echo "Result: FAILED"
+          EXIT_CODE=$HELM_TEMPLATE_EXIT_CODE
         fi
-        return $HELM_TEMPLATE_EXIT_CODE
       fi
     else
       printStepExecutionDelimeter
@@ -85,9 +87,9 @@ function helmTemplate {
     fi
   else
     echo "Skipped due to failure: Previous step has failed"
-    return $1
+    EXIT_CODE=$1
   fi
-  return 0
+  return $EXIT_CODE
 }
 
 function totalInfo {
