@@ -29,7 +29,7 @@ function retrieveValues {
   if [ -n "$CHART_VALUES_DIR" ]; then
     echo "Locating additional values files"
     CHART_VALUES_FILES=$(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \) -print | sed 's|^|./|')
-    echo "Located the following values files: ${CHART_VALUES_FILES}"
+    #echo "Located the following values files: ${CHART_VALUES_FILES}"
   fi  
 }
 
