@@ -24,6 +24,14 @@ function displayInfo {
   printDelimeter
 }
 
+function retrieveValues {
+  printLargeDelimeter
+  if [ -d "$CHART_VALUES_DIR" ]; then
+    echo "Locating additional values files"
+    CHART_VALUES_FILES=($(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \)))
+    echo "Located the following values files: ${CHART_VALUES_FILES[@]}"    
+}
+
 function helmLint {
   echo -e "\n\n\n"
   echo -e "1. Checking a chart for possible issues\n"
@@ -51,22 +59,22 @@ function helmTemplate {
 
   if [[ "$1" -eq 0 ]]; then
     if [ -n "$CHART_VALUES" ]; then
-      if [ -n "$CHART_VALUES_EXTRA" ]; then
-        IFS=$'\n'
-        for extra_values in $CHART_VALUES_EXTRA; do
-          echo "helm template --values $CHART_VALUES --values $extra_values $CHART_LOCATION"
-          printStepExecutionDelimeter
-          helm template --values "$CHART_VALUES" --values "$extra_values" "$CHART_LOCATION"
-          HELM_TEMPLATE_EXIT_CODE=$?
-          printStepExecutionDelimeter
-          if [ $HELM_TEMPLATE_EXIT_CODE -eq 0 ]; then
-            echo "Result: SUCCESS"
-          else
-            echo "Result: FAILED"
-            EXIT_CODE=$HELM_TEMPLATE_EXIT_CODE
-          fi
-        done
-        unset IFS
+      if [ -n "$CHART_VALUES_DIR" ]; then
+        CHART_VALUES_FILES=($(retrieveValues "$CHART_VALUES_DIR"))
+        if [ ${CHART_VALUES_FILES[@]} -gt 0 ]; then
+          for chart_values_file in "${CHART_VALUES_FILES[@]}"; do
+            echo "helm template --values $CHART_VALUES --values $chart_values_file $CHART_LOCATION"
+            printStepExecutionDelimeter
+            helm template --values "$CHART_VALUES" --values "$extra_values" "$CHART_LOCATION"
+            HELM_TEMPLATE_EXIT_CODE=$?
+            printStepExecutionDelimeter
+            if [ $HELM_TEMPLATE_EXIT_CODE -eq 0 ]; then
+              echo "Result: SUCCESS"
+            else
+              echo "Result: FAILED"
+              EXIT_CODE=$HELM_TEMPLATE_EXIT_CODE
+            fi
+          done
       else
         echo "helm template --values $CHART_VALUES $CHART_LOCATION"
         printStepExecutionDelimeter
