@@ -35,7 +35,7 @@ function displayInfo {
 
 function retrieveValues {
   printLargeDelimeter
-  CHART_VALUES_FILES=()
+  declare -a CHART_VALUES_FILES
   if [ -d "$CHART_VALUES_DIR" ]; then
     echo "Locating additional values files"
     while IFS= read -r -d '' file; do
