@@ -73,7 +73,7 @@ function helmTemplate {
   if [[ "$1" -eq 0 ]]; then
     if [ -n "$CHART_VALUES" ]; then
       if [ -n "$CHART_VALUES_DIR" ]; then
-        retrieveValues
+        #retrieveValues
         if [ -n $CHART_VALUES_FILES ]; then
           IFS=$'\n'
           for chart_values_file in $CHART_VALUES_FILES; do
