@@ -74,7 +74,7 @@ function helmTemplate {
     if [ -n "$CHART_VALUES" ]; then
       if [ -n "$CHART_VALUES_DIR" ]; then
         retrieveValues
-        if [ -n $CHART_VALUES_FILES ]; then
+        if [ -n "$CHART_VALUES_FILES" ]; then
           IFS=$'\n'
           for chart_values_file in $CHART_VALUES_FILES; do
             echo "helm template --values $CHART_VALUES --values $chart_values_file $CHART_LOCATION"
