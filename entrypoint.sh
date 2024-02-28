@@ -25,13 +25,25 @@ function displayInfo {
 }
 
 function retrieveValues {
-  printDelimeter
-  if [ -d "$CHART_VALUES_DIR" ]; then
+  printLargeDelimeter
+  if [ -n "$CHART_VALUES_DIR" ]; then
     echo "Locating additional values files"
     CHART_VALUES_FILES=\($(find "$CHART_VALUES_DIR" -type f -name "*.yaml" -o -name "*.yml")\)
     echo "Located the following values files: ${CHART_VALUES_FILES[@]}"
   fi  
 }
+
+# function retrieveValues {
+#   printLargeDelimeter
+#   declare -a CHART_VALUES_FILES
+#   if [ -d "$CHART_VALUES_DIR" ]; then
+#     echo "Locating additional values files"
+#     while IFS= read -r -d '' file; do
+#       CHART_VALUES_FILES+=("$file")
+#     done < <(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \) -print0)
+#     echo "Located the following values files: ${CHART_VALUES_FILES[@]}"
+#   fi  
+# }
 
 function helmLint {
   echo -e "\n\n\n"
@@ -62,9 +74,8 @@ function helmTemplate {
     if [ -n "$CHART_VALUES" ]; then
       if [ -n "$CHART_VALUES_DIR" ]; then
         retrieveValues
-        if [ -n $CHART_VALUES_FILES ]; then
-          IFS=$'\n'
-          for chart_values_file in $CHART_VALUES_FILES; do
+        if [ ${#CHART_VALUES_FILES[@]} -gt 0 ]; then
+          for chart_values_file in "${CHART_VALUES_FILES[@]}"; do
             echo "helm template --values $CHART_VALUES --values $chart_values_file $CHART_LOCATION"
             printStepExecutionDelimeter
             helm template --values "$CHART_VALUES" --values "$chart_values_file" "$CHART_LOCATION"
