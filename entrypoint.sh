@@ -28,7 +28,7 @@ function retrieveValues {
   printLargeDelimeter
   if [ -d "$CHART_VALUES_DIR" ]; then
     echo "Locating additional values files"
-    CHART_VALUES_FILES=($(find "$CHART_VALUES_DIR" -type f -name "*.yaml" -o -name "*.yml"))
+    CHART_VALUES_FILES=$(find "$CHART_VALUES_DIR" -type f -name "*.yaml" -o -name "*.yml")
     echo "Located the following values files: ${CHART_VALUES_FILES[@]}"
   fi  
 }
