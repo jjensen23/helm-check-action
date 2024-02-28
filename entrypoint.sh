@@ -25,11 +25,11 @@ function displayInfo {
 }
 
 function retrieveValues {
-  echo "Attempting to locate additional values files"
+  echo "2a. Attempting to locate additional values files"
   printDelimeter
   if [ -n "$CHART_VALUES_DIR" ]; then
     CHART_VALUES_FILES=$(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \))
-    printf "Located the following values files:\\n$CHART_VALUES_FILES\\n"
+    echo -e "Located the following values files:\n$CHART_VALUES_FILES"
   fi
   printDelimeter
   echo
