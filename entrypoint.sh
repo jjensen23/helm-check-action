@@ -24,11 +24,23 @@ function displayInfo {
   printDelimeter
 }
 
+# function retrieveValues {
+#   printLargeDelimeter
+#   if [ -d "$CHART_VALUES_DIR" ]; then
+#     echo "Locating additional values files"
+#     CHART_VALUES_FILES=($(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \)))
+#     echo "Located the following values files: ${CHART_VALUES_FILES[@]}"
+#   fi  
+# }
+
 function retrieveValues {
   printLargeDelimeter
+  CHART_VALUES_FILES=()
   if [ -d "$CHART_VALUES_DIR" ]; then
     echo "Locating additional values files"
-    CHART_VALUES_FILES=($(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \)))
+    while IFS= read -r -d '' file; do
+      CHART_VALUES_FILES+=("$file")
+    done < <(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \) -print0)
     echo "Located the following values files: ${CHART_VALUES_FILES[@]}"
   fi  
 }
