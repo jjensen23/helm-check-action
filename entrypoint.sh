@@ -25,25 +25,15 @@ function displayInfo {
 }
 
 function retrieveValues {
-  printLargeDelimeter
+  echo "Attempting to locate additional values files"
+  printDelimeter
   if [ -n "$CHART_VALUES_DIR" ]; then
-    echo "Locating additional values files"
     CHART_VALUES_FILES=$(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \))
-    echo "Located the following values files: $CHART_VALUES_FILES"
-  fi  
+    printf "Located the following values files:\\n$CHART_VALUES_FILES\\n"
+  fi
+  printDelimeter
+  echo
 }
-
-# function retrieveValues {
-#   printLargeDelimeter
-#   declare -a CHART_VALUES_FILES
-#   if [ -d "$CHART_VALUES_DIR" ]; then
-#     echo "Locating additional values files"
-#     while IFS= read -r -d '' file; do
-#       CHART_VALUES_FILES+=("$file")
-#     done < <(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \) -print0)
-#     echo "Located the following values files: ${CHART_VALUES_FILES[@]}"
-#   fi  
-# }
 
 function helmLint {
   echo -e "\n\n\n"
@@ -78,7 +68,7 @@ function helmTemplate {
           IFS=$'\n'
           for chart_values_file in $CHART_VALUES_FILES; do
             echo "helm template --values $CHART_VALUES --values $chart_values_file $CHART_LOCATION"
-            printStepExecutionDelimeter
+            printDelimeter
             helm template --values "$CHART_VALUES" --values "$chart_values_file" "$CHART_LOCATION"
             HELM_TEMPLATE_EXIT_CODE=$?
             printStepExecutionDelimeter
@@ -93,7 +83,7 @@ function helmTemplate {
         fi
       else
         echo "helm template --values $CHART_VALUES $CHART_LOCATION"
-        printStepExecutionDelimeter
+        printDelimeter
         helm template --values "$CHART_VALUES" "$CHART_LOCATION"
         HELM_TEMPLATE_EXIT_CODE=$?
         printStepExecutionDelimeter
