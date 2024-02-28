@@ -74,8 +74,9 @@ function helmTemplate {
     if [ -n "$CHART_VALUES" ]; then
       if [ -n "$CHART_VALUES_DIR" ]; then
         retrieveValues
-        if [ ${#CHART_VALUES_FILES[@]} -gt 0 ]; then
-          for chart_values_file in "${CHART_VALUES_FILES[@]}"; do
+        if [ -n $CHART_VALUES_FILES ]; then
+          IFS=$'\n'
+          for chart_values_file in $CHART_VALUES_FILES; do
             echo "helm template --values $CHART_VALUES --values $chart_values_file $CHART_LOCATION"
             printStepExecutionDelimeter
             helm template --values "$CHART_VALUES" --values "$chart_values_file" "$CHART_LOCATION"
@@ -88,6 +89,7 @@ function helmTemplate {
               EXIT_CODE=$HELM_TEMPLATE_EXIT_CODE
             fi
           done
+          unset IFS
         fi
       else
         echo "helm template --values $CHART_VALUES $CHART_LOCATION"
