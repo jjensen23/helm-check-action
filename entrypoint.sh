@@ -54,7 +54,10 @@ function helmLint {
     if [ -n "$CHART_VALUES_DIR" ]; then
       retrieveValues
       set -- $CHART_VALUES_FILES
-      helm lint "$CHART_LOCATION" --values "$CHART_VALUES" --values "$CHART_VALUES_FILES[1]"
+      EXTRA_LINT_VALUES=$(echo $CHART_VALUES_FILES |cut -d " " -f 1)
+      echo "Trying lint with: $EXTRA_LINT_VALUES"
+      echo "helm lint $CHART_LOCATION --values $CHART_VALUES --values $EXTRA_LINT_VALUES"
+      helm lint "$CHART_LOCATION" --values "$CHART_VALUES" --values "$EXTRA_LINT_VALUES"
       HELM_LINT_EXIT_CODE=$?
       printStepExecutionDelimeter
       if [ $HELM_LINT_EXIT_CODE -eq 0 ]; then
