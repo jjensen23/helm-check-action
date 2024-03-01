@@ -50,7 +50,19 @@ function helmLint {
   if [ $HELM_LINT_EXIT_CODE -eq 0 ]; then
     echo "Result: SUCCESS"
   else
-    echo "Result: FAILED"
+    echo "Result: Base lint FAILED; trying with extra values if possible"
+    if [ -n "$CHART_VALUES_DIR" ]; then
+      retrieveValues
+      set -- $CHART_VALUES_FILES
+      helm lint "$CHART_LOCATION" --values "$CHART_VALUES" --values "$CHART_VALUES_FILES[1]"
+      HELM_LINT_EXIT_CODE=$?
+      printStepExecutionDelimeter
+      if [ $HELM_LINT_EXIT_CODE -eq 0 ]; then
+        echo "Result: SUCCESS"
+      else
+        echo "Result: FAILED"
+      fi
+    fi
   fi
   return $HELM_LINT_EXIT_CODE
 }
