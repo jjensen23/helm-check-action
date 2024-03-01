@@ -16,7 +16,7 @@ function displayInfo {
   echo
   printDelimeter
   echo
-  HELM_CHECK_VERSION="v1.1.0"
+  HELM_CHECK_VERSION="v1.1.1"
   HELM_CHECK_SOURCES="https://github.com/jjensen23/helm-check-action"
   echo "Helm-Check $HELM_CHECK_VERSION"
   echo -e "Source code: $HELM_CHECK_SOURCES"
@@ -25,7 +25,7 @@ function displayInfo {
 }
 
 function retrieveValues {
-  echo "2a. Attempting to locate additional values files"
+  echo "Attempting to locate additional values files"
   printDelimeter
   if [ -n "$CHART_VALUES_DIR" ]; then
     CHART_VALUES_FILES=$(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \))
@@ -50,7 +50,22 @@ function helmLint {
   if [ $HELM_LINT_EXIT_CODE -eq 0 ]; then
     echo "Result: SUCCESS"
   else
-    echo "Result: FAILED"
+    echo "Result: Base lint FAILED; trying with extra values if possible"
+    if [ -n "$CHART_VALUES_DIR" ]; then
+      retrieveValues
+      set -- $CHART_VALUES_FILES
+      EXTRA_LINT_VALUES=$(echo $CHART_VALUES_FILES |cut -d " " -f 1)
+      echo "Trying lint with: $EXTRA_LINT_VALUES"
+      echo "helm lint $CHART_LOCATION --values $CHART_VALUES --values $EXTRA_LINT_VALUES"
+      helm lint "$CHART_LOCATION" --values "$CHART_VALUES" --values "$EXTRA_LINT_VALUES"
+      HELM_LINT_EXIT_CODE=$?
+      printStepExecutionDelimeter
+      if [ $HELM_LINT_EXIT_CODE -eq 0 ]; then
+        echo "Result: SUCCESS"
+      else
+        echo "Result: FAILED"
+      fi
+    fi
   fi
   return $HELM_LINT_EXIT_CODE
 }
@@ -71,7 +86,7 @@ function helmTemplate {
             printDelimeter
             helm template --values "$CHART_VALUES" --values "$chart_values_file" "$CHART_LOCATION"
             HELM_TEMPLATE_EXIT_CODE=$?
-            printStepExecutionDelimeter
+            printDelimeter
             if [ $HELM_TEMPLATE_EXIT_CODE -eq 0 ]; then
               echo "Result: SUCCESS"
             else
@@ -86,7 +101,7 @@ function helmTemplate {
         printDelimeter
         helm template --values "$CHART_VALUES" "$CHART_LOCATION"
         HELM_TEMPLATE_EXIT_CODE=$?
-        printStepExecutionDelimeter
+        printDelimeter
         if [ $HELM_TEMPLATE_EXIT_CODE -eq 0 ]; then
           echo "Result: SUCCESS"
         else
