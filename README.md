@@ -1,4 +1,4 @@
-# Description [![Version](https://img.shields.io/badge/version-v1.1.1-color.svg)](https://github.com/jjensen23/helm-check-action/releases/tag/v1.1.1)
+# Description [![Version](https://img.shields.io/badge/version-v1.2.1-color.svg)](https://github.com/jjensen23/helm-check-action/releases/tag/v1.2.1)
 
 Fork of: https://github.com/igabaydulin/helm-check-action with functionality for additional values files.
 
@@ -32,7 +32,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: helm-check
-      uses: jjensen23/helm-check-action@v1.1.1
+      uses: jjensen23/helm-check-action@v1.2.1
       env:
         CHART_LOCATION: charts/exhibit-service
         CHART_VALUES: charts/exhibit-service/values.yaml

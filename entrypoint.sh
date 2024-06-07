@@ -16,7 +16,7 @@ function displayInfo {
   echo
   printDelimeter
   echo
-  HELM_CHECK_VERSION="v1.1.1"
+  HELM_CHECK_VERSION="v1.2.1"
   HELM_CHECK_SOURCES="https://github.com/jjensen23/helm-check-action"
   echo "Helm-Check $HELM_CHECK_VERSION"
   echo -e "Source code: $HELM_CHECK_SOURCES"
