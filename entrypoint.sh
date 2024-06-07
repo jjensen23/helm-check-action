@@ -28,7 +28,7 @@ function retrieveValues {
   echo "Attempting to locate additional values files"
   printDelimeter
   if [ -n "$CHART_VALUES_DIR" ]; then
-    CHART_VALUES_FILES=$(find "$CHART_VALUES_DIR" -type f \( -name "*.yaml" -o -name "*.yml" \))
+    CHART_VALUES_FILES=$(find "$CHART_VALUES_DIR" -type f \( -name "*-*.yaml" -o -name "*-*.yml" \))
     echo -e "Located the following values files:\n$CHART_VALUES_FILES"
   fi
   printDelimeter
@@ -82,11 +82,23 @@ function helmTemplate {
         if [ -n "$CHART_VALUES_FILES" ]; then
           IFS=$'\n'
           for chart_values_file in $CHART_VALUES_FILES; do
-            echo "helm template --values $CHART_VALUES --values $chart_values_file $CHART_LOCATION"
-            printDelimeter
-            helm template --values "$CHART_VALUES" --values "$chart_values_file" "$CHART_LOCATION"
-            HELM_TEMPLATE_EXIT_CODE=$?
-            printDelimeter
+            check_additional_base_values=$(echo $chart_values_file |sed 's/values-[^.]*\./values./g')
+            location=$(dirname $check_additional_base_values)
+            file=$(basename $check_additional_base_values)
+            find $location -type f -name $file
+            if [ $? -eq 0 ]; then
+              echo "helm template --values $CHART_VALUES --values $check_additional_base_values --values $chart_values_file $CHART_LOCATION"
+              printDelimeter
+              helm template --values "$CHART_VALUES" --values $check_additional_base_values --values "$chart_values_file" "$CHART_LOCATION"
+              HELM_TEMPLATE_EXIT_CODE=$?
+              printDelimeter
+            else
+              echo "helm template --values $CHART_VALUES --values $chart_values_file $CHART_LOCATION"
+              printDelimeter
+              helm template --values "$CHART_VALUES" --values "$chart_values_file" "$CHART_LOCATION"
+              HELM_TEMPLATE_EXIT_CODE=$?
+              printDelimeter
+            fi           
             if [ $HELM_TEMPLATE_EXIT_CODE -eq 0 ]; then
               echo "Result: SUCCESS"
             else
