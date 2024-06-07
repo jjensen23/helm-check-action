@@ -35,17 +35,6 @@ function retrieveValues {
   echo
 }
 
-function retrieveAddlBaseValues {
-  echo "Checking for additional base values files"
-  printDelimeter
-  if [ -n "$CHART_VALUES_DIR" ]; then
-    find "$CHART_VALUES_DIR" -type f \( -name "values.yaml" -o name "values.yml"\)
-    if [ $? -eq 0 ]; then
-      ADDL_VALUES_CODE=0
-    fi
-  fi
-}
-
 function helmLint {
   echo -e "\n\n\n"
   echo -e "1. Checking a chart for possible issues\n"
