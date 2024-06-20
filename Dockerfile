@@ -1,6 +1,6 @@
 FROM alpine/helm:3.12.1
 
-LABEL version="1.2.1"
+LABEL version="1.2.2"
 LABEL repository="https://github.com/jjensen23/helm-check-action"
 LABEL maintainer="Jeff Jensen"
 

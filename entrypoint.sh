@@ -51,19 +51,35 @@ function helmLint {
     echo "Result: SUCCESS"
   else
     echo "Result: Base lint FAILED; trying with extra values if possible"
-    if [ -n "$CHART_VALUES_DIR" ]; then
-      retrieveValues
-      set -- $CHART_VALUES_FILES
-      EXTRA_LINT_VALUES=$(echo $CHART_VALUES_FILES |cut -d " " -f 1)
-      echo "Trying lint with: $EXTRA_LINT_VALUES"
-      echo "helm lint $CHART_LOCATION --values $CHART_VALUES --values $EXTRA_LINT_VALUES"
-      helm lint "$CHART_LOCATION" --values "$CHART_VALUES" --values "$EXTRA_LINT_VALUES"
-      HELM_LINT_EXIT_CODE=$?
-      printStepExecutionDelimeter
-      if [ $HELM_LINT_EXIT_CODE -eq 0 ]; then
-        echo "Result: SUCCESS"
-      else
-        echo "Result: FAILED"
+    if [ -n "$CHART_VALUES" ]; then
+      if [ -n "$CHART_VALUES_DIR" ]; then
+        retrieveValues
+        if [ -n "$CHART_VALUES_FILES" ]; then
+          IFS=$'\n'
+          for chart_values_file in $CHART_VALUES_FILES; do
+            check_additional_base_values=$(echo $chart_values_file |sed 's/values-[^.]*\./values./g')
+            location=$(dirname $check_additional_base_values)
+            file=$(basename $check_additional_base_values)
+            find $location -type f -name $file
+            if [ $? -eq 0 ]; then
+              echo "helm lint $CHART_LOCATION --values $CHART_VALUES --values $check_additional_base_values --values $chart_values_file"
+              printDelimeter
+              helm lint "$CHART_LOCATION" --values "$CHART_VALUES" --values "$chart_values_file" --values "$check_additional_base_values"
+              HELM_LINT_EXIT_CODE=$?
+              printDelimeter
+            fi   
+            if [ $HELM_LINT_EXIT_CODE -eq 0 ]; then
+              echo "Result: SUCCESS"
+              EXIT_CODE=$HELM_LINT_EXIT_CODE
+              break
+            else
+              echo "Result: FAILED"
+              EXIT_CODE=$HELM_LINT_EXIT_CODE
+              break
+            fi
+          done
+          unset IFS
+        fi
       fi
     fi
   fi
